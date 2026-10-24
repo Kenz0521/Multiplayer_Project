@@ -5,4 +5,5 @@ public class PlayerSettingsData : ScriptableObject
 {
     public float moveSpeed;
     public float knockbackForce;
+    public float maxVelocity;
 }
