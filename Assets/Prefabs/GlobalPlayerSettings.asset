@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06f46b0e38239ed4fb58c085b165d811, type: 3}
   m_Name: GlobalPlayerSettings
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSettingsData
-  moveSpeed: 15
-  knockbackForce: 3
+  moveSpeed: 30
+  knockbackForce: 0.3
   maxVelocity: 15

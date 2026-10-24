@@ -29,7 +29,6 @@ public class PlayerInputScript : MonoBehaviour
         if (myMeshes == null)
             myMeshes = GetComponentsInChildren<MeshRenderer>();
 
-        myRB.maxLinearVelocity = playerSettingsData.maxVelocity;
         playerIndex = FindObjectsByType<PlayerInputScript>(FindObjectsSortMode.None).Length;
 
         foreach (MeshRenderer mesh in myMeshes)
@@ -45,7 +44,13 @@ public class PlayerInputScript : MonoBehaviour
     private void FixedUpdate()
     {
         moveDirection.y = 0;
-        myRB.AddForce(moveDirection * playerSettingsData.moveSpeed, ForceMode.Acceleration);
+        if (moveInput.sqrMagnitude > 0.001f)
+        {
+            Vector3 currentMoveVelocity = new Vector3(myRB.linearVelocity.x, 0f, myRB.linearVelocity.z);
+
+            if (currentMoveVelocity.magnitude < playerSettingsData.maxVelocity)
+                myRB.AddForce(moveDirection * playerSettingsData.moveSpeed, ForceMode.Acceleration);
+        }
     }
     private void LateUpdate()
     {
@@ -61,9 +66,28 @@ public class PlayerInputScript : MonoBehaviour
         // Handles colliding with other players
         if (other.gameObject.tag == "Player")
         {
-            Rigidbody otherRB = other.gameObject.GetComponent<Rigidbody>();
-            // Adds an impulse force in the direction of the current movement multiplied by our velocity and knockbackForce
-            otherRB.AddForce(myRB.linearVelocity.normalized * playerSettingsData.knockbackForce * myRB.linearVelocity.magnitude, ForceMode.Impulse);
+            // Gets the direction from our position to the other players position
+            Vector3 directionToOtherPlayer = (other.gameObject.transform.position - transform.position).normalized;
+
+            // Recieves the relative velocity at the moment of impact
+            Vector3 forceDirection = other.relativeVelocity;
+
+            // Uses Dot product to get the velocity in the direction to the other Player
+            float speedAlongImpactLine = Mathf.Abs(Vector3.Dot(forceDirection, directionToOtherPlayer));
+
+            if (speedAlongImpactLine > 0.1f)
+            {
+                float finalForce = playerSettingsData.knockbackForce * speedAlongImpactLine;
+                Debug.Log($"Speed into collision: {speedAlongImpactLine} | Final Force: {finalForce}");
+
+                Rigidbody otherRB = other.gameObject.GetComponent<Rigidbody>();
+
+                // Adds an impulse force in the direction of the current movement multiplied by our velocity and knockbackForce
+                otherRB.AddForce(directionToOtherPlayer * finalForce, ForceMode.Impulse);
+
+                // Equal and opposite reaction to the knockback force
+                myRB.AddForce(-directionToOtherPlayer * finalForce, ForceMode.Impulse);
+            }
         }
     }
 }
