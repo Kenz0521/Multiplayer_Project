@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Mack_Scene.unity
+    guid: 45f453b142f9f934092005b2665e60f5
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: ff423e77f9150a945a0fac2160328d17, type: 3}
   m_UseUCBPForAssetBundles: 0
