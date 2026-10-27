@@ -22,6 +22,10 @@ public class PlayerInputScript : MonoBehaviour
     [Header("Input Variables")]
     [SerializeField] Vector2 moveInput;
     [SerializeField] Vector2 lookInput;
+
+    //to connect to the director
+    [SerializeField] DirectorAI director;
+    bool eliminated;
     private void Awake()
     {
         if (myRB == null) 
@@ -66,6 +70,12 @@ public class PlayerInputScript : MonoBehaviour
         // Handles colliding with other players
         if (other.gameObject.tag == "Player")
         {
+            //only report the collision once
+            if (director != null && gameObject.GetInstanceID()<other.gameObject.GetInstanceID())
+            {
+                director.RegisterHit();
+            }
+
             // Gets the direction from our position to the other players position
             Vector3 directionToOtherPlayer = (other.gameObject.transform.position - transform.position).normalized;
 
@@ -88,6 +98,35 @@ public class PlayerInputScript : MonoBehaviour
                 // Equal and opposite reaction to the knockback force
                 myRB.AddForce(-directionToOtherPlayer * finalForce, ForceMode.Impulse);
             }
+        }
+    }
+
+    //check if players eliminated
+    public bool IsEliminated()
+    {
+        return eliminated;//return t/f
+    }
+
+    //eliminate player stop movement
+    public void EliminatePlayer()
+    {
+        //return if already eliminated 
+        if (eliminated)
+        {
+            return;
+        }
+
+        eliminated = true;
+
+        //stop recieving movement 
+        moveInput = Vector2.zero;
+        lookInput = Vector2.zero;
+
+        //stop car movement 
+        if (myRB != null)
+        {
+            myRB.linearVelocity = Vector3.zero;
+            myRB.angularVelocity = Vector3.zero;
         }
     }
 }
