@@ -12,5 +12,5 @@ EditorBuildSettings:
     path: Assets/Scenes/Mack_Scene.unity
     guid: 45f453b142f9f934092005b2665e60f5
   m_configObjects:
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: ff423e77f9150a945a0fac2160328d17, type: 3}
   m_UseUCBPForAssetBundles: 0
