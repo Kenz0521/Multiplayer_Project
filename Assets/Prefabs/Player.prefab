@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 7290525993458578191}
   - component: {fileID: 247822072099626025}
   - component: {fileID: 3552532480330863770}
+  - component: {fileID: 400336353810723070}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -245,6 +246,7 @@ MonoBehaviour:
   materialData: {fileID: 11400000, guid: b43e66b874ff8c04bb670bf9c3471ffa, type: 2}
   moveInput: {x: 0, y: 0}
   lookInput: {x: 0, y: 0}
+  director: {fileID: 0}
 --- !u!114 &3552532480330863770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,6 +261,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SplitScreenChannelSetup
   localBrain: {fileID: 5084437155497784606}
   localVirtualCamera: {fileID: 3660972618903642604}
+--- !u!114 &400336353810723070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435213746270532069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d2a04e773df0ab46bd735fd90398883, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerFallDetect
+  fallHeight: -5
 --- !u!1 &1695175679470071607
 GameObject:
   m_ObjectHideFlags: 0
