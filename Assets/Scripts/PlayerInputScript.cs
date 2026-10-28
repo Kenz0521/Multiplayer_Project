@@ -37,6 +37,17 @@ public class PlayerInputScript : MonoBehaviour
 
         foreach (MeshRenderer mesh in myMeshes)
             mesh.material = materialData.materials[playerIndex - 1];
+
+        //register players
+        if (director == null)
+        {
+            director = FindObjectOfType<DirectorAI>();
+        }
+
+        if (director != null)
+        {
+            director.AddPlayer(this);
+        }
     }
     private void Update()
     {
@@ -127,6 +138,13 @@ public class PlayerInputScript : MonoBehaviour
         {
             myRB.linearVelocity = Vector3.zero;
             myRB.angularVelocity = Vector3.zero;
+        }
+    }
+    private void OnDestroy()
+    {
+        if (director != null)
+        {
+            director.RemovePlayer(this);
         }
     }
 }
