@@ -1,11 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.Netcode;
 
 
 public class DirectorAI : MonoBehaviour
 {
     [SerializeField] PlatformController platform; //reference script on shrinking platform 
-    [SerializeField] PlayerInputScript[] players;//store players in match 
+    List<PlayerInputScript> players = new List<PlayerInputScript>();//store players in match 
 
     [SerializeField] float farDistance = 12f;//distance players are considered too far 
 
@@ -21,8 +22,19 @@ public class DirectorAI : MonoBehaviour
     Queue<float> recentHits = new Queue<float>();//store time of hit
     bool matchEnded;//has match ended
 
+    //for NetworkMatchState
+    public int LivingPlayers => CountLivingPlayers();
+    public bool MatchEnded => matchEnded;
+    public string WinnerName { get; private set; } = "No winner";
+
     void Update()
     {
+        //networked match only the server controls the match.
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.IsListening && !NetworkManager.Singleton.IsServer)
+        {
+            return;
+        }
+
         //return if match done
         if (matchEnded)
         {
@@ -32,7 +44,7 @@ public class DirectorAI : MonoBehaviour
         int aliveCount = CountLivingPlayers();//check living players in match 
 
         //end if there were at lesdt 2 players at start and only one is left 
-        if (players.Length >= 2 && aliveCount <= 1)
+        if (players.Count >= 2 && aliveCount <= 1)
         {
             EndMatch();
             return;
@@ -90,7 +102,7 @@ public class DirectorAI : MonoBehaviour
         int pairCount = 0;//counts pairs
 
         //loop through to make pairs 1st persom
-        for (int i = 0; i < players.Length; i++)
+        for (int i = 0; i < players.Count; i++)
         {
             //skip non players
             if (players[i] == null || players[i].IsEliminated())
@@ -99,7 +111,7 @@ public class DirectorAI : MonoBehaviour
             }
 
             //loop through to make pairs 2nd person
-            for (int j = i + 1; j < players.Length; j++)
+            for (int j = i + 1; j < players.Count; j++)
             {
                 //skip non players
                 if (players[j] == null || players[j].IsEliminated())
@@ -146,6 +158,35 @@ public class DirectorAI : MonoBehaviour
         matchEnded = true;//set to avoid game continuing  
         platform.StopShrinking();//stop shrinking 
 
-        Debug.Log("GAME ENDED");//FIX WITH GAME END STUFF 
+        //only 1 is left
+        if (LivingPlayers == 1)
+        {
+            foreach(PlayerInputScript player in players)
+            {
+                if (player != null &&  !player.IsEliminated())
+                {
+                    //winner is player # 
+                    WinnerName = "Player " + player.GetPlayerIndex();
+                    break;
+                }
+            }
+        }
+        Debug.Log("GAME ENDED. Winner: " + WinnerName);//print which player # won
+    }
+
+
+    public void AddPlayer(PlayerInputScript player)
+    {
+        if (player != null && !players.Contains(player))
+        {
+            players.Add(player);
+        }
+    }
+    public void RemovePlayer(PlayerInputScript player)
+    {
+        if (player != null)
+        {
+            players.Remove(player);
+        }
     }
 }
