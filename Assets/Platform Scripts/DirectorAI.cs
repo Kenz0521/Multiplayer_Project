@@ -20,6 +20,9 @@ public class DirectorAI : MonoBehaviour
 
     Queue<float> recentHits = new Queue<float>();//store time of hit
     bool matchEnded;//has match ended
+    public int LivingPlayers { get; private set; }
+    public bool MatchEnded => matchEnded;
+    public string WinnerName { get; private set; } = "";
 
     void Update()
     {
@@ -30,6 +33,7 @@ public class DirectorAI : MonoBehaviour
         }
 
         int aliveCount = CountLivingPlayers();//check living players in match 
+        LivingPlayers = aliveCount;
 
         //end if there were at lesdt 2 players at start and only one is left 
         if (players.Length >= 2 && aliveCount <= 1)
@@ -141,11 +145,35 @@ public class DirectorAI : MonoBehaviour
     }
 
     //end the match 
-    void EndMatch()
+    /*void EndMatch()
     {
         matchEnded = true;//set to avoid game continuing  
         platform.StopShrinking();//stop shrinking 
 
         Debug.Log("GAME ENDED");//FIX WITH GAME END STUFF 
+    }*/
+    void EndMatch()
+    {
+        matchEnded = true;
+
+        platform.StopShrinking();
+
+        WinnerName = "";
+
+        foreach (PlayerInputScript player in players)
+        {
+            if (player != null && !player.IsEliminated())
+            {
+                WinnerName = "Player " + player.GetPlayerIndex();
+                break;
+            }
+        }
+
+        if (string.IsNullOrEmpty(WinnerName))
+        {
+            WinnerName = "No winner";
+        }
+
+        Debug.Log("GAME ENDED - " + WinnerName);
     }
 }

@@ -3,7 +3,7 @@ using Unity.Netcode;
 using Unity.Collections;
 using UnityEngine.SceneManagement;
 
-public class NetworkMatchState : MonoBehaviour
+public class NetworkMatchState : NetworkBehaviour
 {
     public NetworkVariable<int> PlayersRemaining =
         new NetworkVariable<int>(0);
