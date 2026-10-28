@@ -26,9 +26,9 @@ public class DirectorAI : MonoBehaviour
     public string WinnerName { get; private set; } = "";
 
     //for NetworkMatchState
-    public int LivingPlayers => CountLivingPlayers();
-    public bool MatchEnded => matchEnded;
-    public string WinnerName { get; private set; } = "No winner";
+    //public int LivingPlayers => CountLivingPlayers();
+    //public bool MatchEnded => matchEnded;
+    //public string WinnerName { get; private set; } = "No winner";
 
     void Update()
     {
@@ -157,7 +157,7 @@ public class DirectorAI : MonoBehaviour
     }
 
     //end the match 
-    /*void EndMatch()
+    void EndMatch()
     {
         matchEnded = true;//set to avoid game continuing  
         platform.StopShrinking();//stop shrinking 
