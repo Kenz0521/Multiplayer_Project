@@ -203,6 +203,7 @@ public class DirectorAI : MonoBehaviour
         foreach (PlayerInputScript player in playersArray)
         {
             player.enabled = true;
+            
             AddPlayer(player);
         }
     }

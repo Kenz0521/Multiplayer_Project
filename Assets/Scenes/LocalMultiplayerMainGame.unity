@@ -3238,9 +3238,9 @@ MonoBehaviour:
   winningPanel: {fileID: 944562543}
   winningPlayerText: {fileID: 1991480192}
   farDistance: 12
-  slowSpeed: 0.02
-  normalSpeed: 0.07
-  fastSpeed: 0.08
+  slowSpeed: 0.1
+  normalSpeed: 0.2
+  fastSpeed: 0.4
   hitWindow: 4
   hitsToSlowDown: 3
 --- !u!4 &1416441289
