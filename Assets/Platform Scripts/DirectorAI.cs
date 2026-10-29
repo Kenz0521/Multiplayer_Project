@@ -1,12 +1,17 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.Netcode;
+using TMPro;
 
 
 public class DirectorAI : MonoBehaviour
 {
     [SerializeField] PlatformController platform; //reference script on shrinking platform 
-    List<PlayerInputScript> players = new List<PlayerInputScript>();//store players in match 
+    [SerializeField] private List<PlayerInputScript> players = new List<PlayerInputScript>();//store players in match 
+    [SerializeField] Transform[] playerSpawnPoints = new Transform[4];
+    PlayerInputScript[] playersArray;
+    [SerializeField] GameObject winningPanel;
+    [SerializeField] TMP_Text winningPlayerText;
 
     [SerializeField] float farDistance = 12f;//distance players are considered too far 
 
@@ -29,6 +34,18 @@ public class DirectorAI : MonoBehaviour
     //public int LivingPlayers => CountLivingPlayers();
     //public bool MatchEnded => matchEnded;
     //public string WinnerName { get; private set; } = "No winner";
+
+    private void Awake()
+    {
+        playersArray = FindObjectsByType<PlayerInputScript>(FindObjectsSortMode.None);
+        foreach (PlayerInputScript p in playersArray)
+        {
+            p.enabled = true;
+            AddPlayer(p);
+            p.gameObject.transform.position = playerSpawnPoints[p.GetPlayerIndex() - 1].position;
+        }
+
+    }
 
     void Update()
     {
@@ -169,15 +186,26 @@ public class DirectorAI : MonoBehaviour
             {
                 if (player != null &&  !player.IsEliminated())
                 {
+                    player.enabled = false;
                     //winner is player # 
                     WinnerName = "Player " + player.GetPlayerIndex();
+                    winningPanel.SetActive(true);
+                    winningPlayerText.text = WinnerName + " Won!";
                     break;
                 }
             }
         }
         Debug.Log("GAME ENDED. Winner: " + WinnerName);//print which player # won
     }
-
+    public void ResetPlayers()
+    {
+        players.Clear();
+        foreach (PlayerInputScript player in playersArray)
+        {
+            player.enabled = true;
+            AddPlayer(player);
+        }
+    }
 
     public void AddPlayer(PlayerInputScript player)
     {
@@ -190,6 +218,7 @@ public class DirectorAI : MonoBehaviour
     {
         if (player != null)
         {
+            player.enabled = false;
             players.Remove(player);
         }
     }

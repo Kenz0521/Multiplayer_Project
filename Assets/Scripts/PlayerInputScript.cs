@@ -28,6 +28,7 @@ public class PlayerInputScript : MonoBehaviour
     bool eliminated;
     private void Awake()
     {
+        DontDestroyOnLoad(this);
         if (myRB == null) 
             myRB = GetComponent<Rigidbody>();
         if (myMeshes == null)
@@ -48,6 +49,10 @@ public class PlayerInputScript : MonoBehaviour
         {
             director.AddPlayer(this);
         }
+    }
+    private void OnEnable()
+    {
+        eliminated = false;
     }
     private void Update()
     {
@@ -139,6 +144,7 @@ public class PlayerInputScript : MonoBehaviour
             myRB.linearVelocity = Vector3.zero;
             myRB.angularVelocity = Vector3.zero;
         }
+        this.enabled = false;
     }
     private void OnDestroy()
     {
