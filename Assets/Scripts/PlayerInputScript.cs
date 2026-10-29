@@ -38,17 +38,6 @@ public class PlayerInputScript : MonoBehaviour
 
         foreach (MeshRenderer mesh in myMeshes)
             mesh.material = materialData.materials[playerIndex - 1];
-
-        //register players
-        if (director == null)
-        {
-            director = FindObjectOfType<DirectorAI>();
-        }
-
-        if (director != null)
-        {
-            director.AddPlayer(this);
-        }
     }
     private void OnEnable()
     {
@@ -60,6 +49,7 @@ public class PlayerInputScript : MonoBehaviour
         yRotate = Mathf.Clamp(yRotate - lookInput.y * lookSensitivity, yMin, yMax);
 
         moveDirection = transform.forward * moveInput.y + transform.right * moveInput.x;
+        UpdateDirectorReference();
     }
     private void FixedUpdate()
     {
@@ -153,4 +143,17 @@ public class PlayerInputScript : MonoBehaviour
             director.RemovePlayer(this);
         }
     }
+    private void UpdateDirectorReference()
+    {
+        if (director == null)
+        {
+            director = FindFirstObjectByType<DirectorAI>();
+
+            if (director != null)
+            {
+                director.AddPlayer(this);
+            }
+        }
+    }
+
 }
